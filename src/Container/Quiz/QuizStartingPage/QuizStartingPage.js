@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useHistory } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import QuizPage from '../../../Component/Quiz/QuizPage/QuizPage';
+import QuizStartingPageAnimation from './QuizStartingPageAnimation';
+import QuizRenderPage from '../../../Component/Quiz/QuizPage/QuizRenderPage';
  
 
  class QuizStartingPage extends Component {
@@ -180,9 +182,9 @@ import QuizPage from '../../../Component/Quiz/QuizPage/QuizPage';
       
       
         return (<>
-{!this.state.loading?ContentRender:""}
-{this.state.quizstart? <QuizPage quizid = {this.state.urlparam}/>:"" }
-
+ {!this.state.loading?ContentRender:""}
+{this.state.quizstart? <QuizRenderPage quizid = {this.state.urlparam}/>:"" }  
+{this.state.loading==true && !this.state.quizstart?<QuizStartingPageAnimation/>:''}
 
         </>
   

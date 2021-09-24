@@ -34,7 +34,7 @@ formSubmitHandler=(e)=>{
   
   axios.post('/register', data )
   .then( (response) => {
-   localStorage.setItem('token' , response.data.token );
+   localStorage.setItem('TOKEN_KEY' , response.data.token );
    this.setState({
      loggedIn:true
    });

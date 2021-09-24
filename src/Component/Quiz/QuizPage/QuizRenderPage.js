@@ -4,7 +4,7 @@ import React, { Component, Fragment, useRef, useState } from 'react'
  import { Link } from 'react-router-dom';
  import Countdown from 'react-countdown';
  import QuizPageAnimation from './QuizPageAnimation';
- class QuizPage extends Component {
+ class QuizRenderPage extends Component {
 
     state = {
         // quizRadioButtonClass : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer',
@@ -24,17 +24,13 @@ import React, { Component, Fragment, useRef, useState } from 'react'
 
      componentDidMount(){
   
-        // if(!localStorage.getItem("quiz"+params.id)){
-        //     // this.context.router.push("/quiz/"+params.id);
-        //     this.props.history.push("/quiz/"+params.id)
-        // }
-         this.setState({
+      this.setState({
             quiz_id:this.props.quizid
         })
 
         axios.post('/question/'+this.props.quizid)
 .then( (response) => {
-  console.log(response.data)
+  // console.log(response.data)
 this.setState({
     quesData:response.data,
     loading:false,
@@ -66,7 +62,7 @@ quiz_data : JSON.stringify(this.state.selectedQuiz),
 quizid:this.state.quiz_id
 
 }
-console.log(data);
+// console.log(data);
 
     axios.post('/submitquiz/'+this.state.quiz_id , data)
     .then( (response) => {
@@ -81,58 +77,36 @@ console.log(data);
     }
 
     quizSelectHandler = (e) =>{
-        if(!e.target.getAttribute("disabled")  ){
-            let menu =e.target ;
-            if(menu.firstChild){
-              
-var id_question = menu.firstChild.id;
-
-var value_question = menu.firstChild.value;
-
-var condition = 'this.state.selectedQuiz=={} || this.state.selectedQuiz[id_question].indexOf(value_question)==-1';
-if(this.state.selectedQuiz==""  ||this.state.selectedQuiz[id_question]==null || this.state.selectedQuiz[id_question].indexOf(value_question)==-1 ){
-   
-    var updateQuiz ={
-        ...this.state.selectedQuiz
-    }
+      if(!e.target.getAttribute("disabled")){
+        var id_question =e.target.getAttribute("questionid");
+        var value_question = e.target.value;
+          e.target.setAttribute('disabled',"true");
+          e.target.parentNode.className  = 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-green-200 bg-red-200';
+      
+          var updateQuiz ={
+                    ...this.state.selectedQuiz
+                }
      if(this.state.selectedQuiz[id_question]){
                  var updateSubmittedOptionsForSameQuestion = [...this.state.selectedQuiz[id_question],value_question] ;
                  updateQuiz[id_question]   = updateSubmittedOptionsForSameQuestion;
+                 console.log("QUes ALready Exist")
                    } else{
-                      
+                    console.log("New Question")
                     updateQuiz[id_question]=[value_question];
-                     
-                   }
+                    }
         
                    this.setState({
                     selectedQuiz:updateQuiz,
                    })
-               
-                   
-                     console.log(this.state.selectedQuiz);
-                    menu.removeChild(menu.firstChild);
-                    // console.log(e.target);
-                    e.target.className  = 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-green-200 bg-red-200';
-        
-                  e.target.setAttribute('disabled',"true");
-} 
-
-
-        }
- 
-        }
+                localStorage.setItem("quiz"+this.state.quiz_id, JSON.stringify(updateQuiz) );
+   }
          
-        localStorage.setItem("quiz"+this.state.quiz_id, JSON.stringify(this.state.selectedQuiz) );
+        
     }
-    // 
-
-    handleGoBack = ()=>{
+      handleGoBack = ()=>{
         this.props.history.goBack();
     }
-
-
-
-    isJson=(item)=> {
+  isJson=(item)=> {
       item = typeof item !== "string"
           ? JSON.stringify(item)
           : item;
@@ -206,7 +180,7 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
           var setting = JSON.parse(i.setting) ;
           var posMark = setting.posMark;
           var negMark = setting.negMark;
-          console.log(posMark);
+          // console.log(posMark);
           if (this.isJson(i.options)){
   var options = JSON.parse(i.options) ;
   
@@ -216,20 +190,15 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
   var makeSelectedQuizdisable = false;
   var classOfRadioButton = this.state.quizRadioButtonClass;
   if(quiz!=null && quiz.indexOf(optionkey) !=-1 ){
-      console.log(quiz);
+      // console.log(quiz);
       var classOfRadioButton = this.state.quizRadioButtonOnCLickClass;
   }
    var optionValue = "";
    optionValue =   options[optionkey].option;
-  // if(options[optionkey].type=='text'){
-  //   optionValue =   options[optionkey].option;
-  //   // optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
-  // }else if(options[optionkey].type=='img'){
-  //   optionValue = <img src={options[optionkey].option}  />;
-  // }
-  
+   optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
+  var makeid =    id+optionkey;
     return (
-          <label onClick={this.quizSelectHandler}  for={id} class={classOfRadioButton} disabled={"false"} value={optionkey} ><input id={id} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
+          <label for={makeid} class={classOfRadioButton}  value={optionkey} ><input  onClick={this.quizSelectHandler} questionid={id}   id={makeid} key={makeid} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
        )
   })
 }else{
@@ -255,80 +224,15 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
   // if(JSON.parse(i.question)){
   //   console.log(i);
   // }
-  console.log(i.question);
+  // console.log(i.question);
   
               return(<div class="bg-white p-12 rounded-lg  w-full mt-8"><div><p class="text-2xl font-bold"  dangerouslySetInnerHTML={{__html:question}} /><p class="text-2xl font-bold">(postive mark: {posMark} , negative mark: {negMark})</p>
      {renderOptions}
     </div></div>)
           })
       }
-
-// code sesh 
-    
-//    var selected_quiz = this.state.selectedQuiz;
-//     if(!this.state.loading ){
-        
-//     const quizData =  this.state.quesData.data;
-//      var renderQuiz  =quizData==0?ModalCode:  quizData.map(i=>{
-
-//         var setting = JSON.parse(i.setting) ;
-//         var posMark = setting.posMark;
-//         var negMark = setting.negMark;
-//         console.log(posMark);
-
-// var options = JSON.parse(i.options) ;
  
-//  var renderOptions =  Object.keys(options).map(optionkey=>{
-//     var id =  i.id;
-// var quiz = selected_quiz[id];
-// var makeSelectedQuizdisable = false;
-// var classOfRadioButton = this.state.quizRadioButtonClass;
-// if(quiz!=null && quiz.indexOf(optionkey) !=-1 ){
-//     console.log(quiz);
-//     var classOfRadioButton = this.state.quizRadioButtonOnCLickClass;
-// }
-//  var optionValue = "";
- 
-// if(options[optionkey].type=='text'){
-//   optionValue =   options[optionkey].option;
-// }else if(options[optionkey].type=='img'){
-//   optionValue = <img src={options[optionkey].option}  />;
-// }
 
-//   return (
-//         <label onClick={this.quizSelectHandler}  for={id} class={classOfRadioButton} disabled={"false"} value={optionkey} ><input id={id} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
-//      )
-// })
- 
-// var questionJson = JSON.parse(i.question);
-// var question = "";
-// if(questionJson.type="text"){
-//   question = questionJson.question;
-// }else if(questionJson.type="img"){
-//   question = <img src={questionJson.question}  />;
-// }
-
-//             return(<div class="bg-white p-12 rounded-lg  w-full mt-8"><div><p class="text-2xl font-bold">{question}</p><p class="text-2xl font-bold">(postive mark: {posMark} , negative mark: {negMark})</p>
-//    {renderOptions}
-//   </div></div>)
-//         })
-//     }
-
-// const renderer = ({ hours, minutes, seconds, completed }) => {
-//   if (completed) {
-//     this.onClickHandle()
-//   } else {
-//     // Render a countdown
-//     return <span>{hours}:{minutes}:{seconds}</span>;
-//   }
-// };
-// const timer = this.state.quiz_time>0?     <Countdown
-// date={Date.now() + this.state.quiz_time*60*1000}
-// renderer={renderer}
-// />:""
-
-// console.log(timer)
-//  document.title = timer;
 
 var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center justify-center px-8 py-3">
 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded " type="button" onClick={this.onClickHandle}>Submit</button></div> 
@@ -343,4 +247,4 @@ var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center just
     }
 }
 
-export default QuizPage
+export default QuizRenderPage

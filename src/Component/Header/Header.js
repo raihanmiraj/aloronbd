@@ -51,7 +51,7 @@ class Header extends Component {
           <Switch>
           <Route exact path="/" component={Home} />
           <Route  path="/login" component=  {()=> <Login user={this.state.user} />} />
-          <Route  path="/quizlist" component=  {()=> <QuizList/>} />
+          <Route  exact path="/quizlist" component=  { QuizList } />
           {/* <Route  path="/quiz/:id" component=  {()=> <QuizStartingPage/>} /> */}
           <Route exact  path="/quiz/:id" component={QuizStartingPage} />
           <Route exact  path="/quiz/start/:id" component={QuizPage} />

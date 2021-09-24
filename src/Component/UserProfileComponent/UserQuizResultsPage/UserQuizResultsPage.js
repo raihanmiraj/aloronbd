@@ -56,7 +56,24 @@ this.setState({
   }
 
 
-  
+  isJson=(item)=> {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        return false;
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return true;
+    }
+
+    return false;
+}
+
 
 
     render() {
@@ -122,41 +139,60 @@ this.setState({
       
 
 var QuizResultRender = !this.state.loading? userResultQuiz.map(data=>{
-    var question = data.question.question;
-if(data.question.type=='img'){
-    var question = <img src={data.question.question}/>
+    var questionJson = data.question;
+// if(data.question.type=='img'){
+//     var question = <img src={data.question.question}/>
+// }
+
+var statusques = "";
+var question = "";
+if (this.isJson(questionJson)){
+  question = questionJson.question;
+}else{
+// var question = "Question Load Error";
+var question = data.id;
 }
+question =  <div dangerouslySetInnerHTML={{__html:question}} />
+
+
 var options = data.option;
  
-
+if (this.isJson(options)){
 var renderOptions =  Object.keys(options).map(optionkey=>{
     var id =  data.id;
  
 
 var classOfRadioButton =this.state.quizRadioButtonClass;
  var optionValue = "";
- 
-if(options[optionkey].type=='text'){
-  optionValue =   options[optionkey].option;
-}else if(options[optionkey].type=='img'){
-  optionValue = <img src={options[optionkey].option}  />;
-}
 
+
+ 
+// if(options[optionkey].type=='text'){
+//   optionValue =   options[optionkey].option
+// }else if(options[optionkey].type=='img'){;
+//   optionValue = <img src={options[optionkey].option}  />;
+// }
+statusques = "";
+optionValue =   options[optionkey].option;
+optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
 if(options[optionkey].userans == 1 && options[optionkey].mainans == 1){
-   var  classOfRadioButton =this.state.quizRightAns;
+   var  classOfRadioButton =this.state.quizRightAns; statusques = "Correct";
 }else if(options[optionkey].userans == 1  && options[optionkey].mainans ==0) {
-    var  classOfRadioButton =this.state.quizWrongButton; 
+    var  classOfRadioButton =this.state.quizWrongButton; statusques = "InCorrect";
 }else if(options[optionkey].userans == 0  && options[optionkey].mainans ==1) {
     var  classOfRadioButton =this.state.quizRightAns; 
-}
+} 
  
   return (
         <label onClick={this.quizSelectHandler}  for={id} class={classOfRadioButton} disabled={"false"} value={optionkey} ><input id={id} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
      )
 })
+}else{
+    var renderOptions = "Option Error"
+}
 
 
-    return (<div class="bg-white p-12 rounded-lg  w-full mt-8"><div><p class="text-2xl font-bold">{question}</p> 
+    return (<div class="bg-white p-12 rounded-lg  w-full mt-8"><div><p class="text-2xl font-bold">{question}</p> { statusques }
     {renderOptions}
    </div></div>)
 }):""
