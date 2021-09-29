@@ -1,7 +1,7 @@
-const TOKEN_KEY = localStorage.getItem("token");
+const TOKEN_KEY = "TOKEN_KEY";
 
-export const login = () => {
-    localStorage.setItem(TOKEN_KEY, 'TestLogin');
+export const login = (TOKEN_KEY_VALUE) => {
+    localStorage.setItem(TOKEN_KEY, TOKEN_KEY_VALUE);
 }
 
 export const logout = () => {

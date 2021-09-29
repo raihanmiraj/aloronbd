@@ -17,10 +17,15 @@ import Profile from '../../Container/Profile/Profile';
  import QuizPage from '../Quiz/QuizPage/QuizPage';
  import UserProfile from '../../Container/Profile/UserProfile/UserProfile';
  import UserQuizResultsPage from '../UserProfileComponent/UserQuizResultsPage/UserQuizResultsPage';
+ import PublicRoute from '../PublicRoute';
+ import PrivateRoute from '../PrivateRoute';
+ import AuthContext from '../Context/AuthContext';
+ import {isLogin} from '../utils/index';
  
 class Header extends Component {
    state = {
-       user:{}
+       user:{},
+       loggedIn:""
    }
 
        // "start": "react-scripts start",
@@ -42,24 +47,44 @@ class Header extends Component {
       this.setState({user: user}) 
    }
   
-
+   setLoggedIn=()=>{
+     this.setState({
+       loggedIn:true
+     })
+   }
     render() {
+      const loggedIn = this.state.loggedIn;
+      const setLoggedIn = this.setLoggedIn;
+      console.log(loggedIn);
         return (
             <>
      <Router> 
+     <AuthContext.Provider value={{ loggedIn, setLoggedIn }}>
           <Navbar user={this.state.user} setUser={this.setUser} />
+          </AuthContext.Provider>
           <Switch>
-          <Route exact path="/" component={Home} />
+          {/* <Route exact path="/" component={Home} />
           <Route  path="/login" component=  {()=> <Login user={this.state.user} />} />
           <Route  exact path="/quizlist" component=  { QuizList } />
-          {/* <Route  path="/quiz/:id" component=  {()=> <QuizStartingPage/>} /> */}
+          
           <Route exact  path="/quiz/:id" component={QuizStartingPage} />
           <Route exact  path="/quiz/start/:id" component={QuizPage} />
           <Route  path="/forgetpassword" component={ForgetPassword} />
           <Route  path="/register" component={()=> <Register user={this.state.user} />}  />
           <Route  path="/profile" component={()=> <UserProfile user={this.state.user} />} />
           <Route exact   path="/userquizresult/:id" component={UserQuizResultsPage} />
-          
+           */}
+             <Switch>
+          <PublicRoute restricted={false} component={Home} path="/" exact />
+          <PrivateRoute component={QuizList} path="/quizlist" exact />
+          <PublicRoute restricted={isLogin()} component={()=> <Login user={this.state.user} />} path="/login" exact />
+          <PublicRoute restricted={isLogin()}  component={Register} path="/register" exact />
+          <PrivateRoute component={QuizStartingPage} path="/quiz/:id"  exact />
+          <PrivateRoute component={QuizPage} path="/quiz/start/:id" exact />
+          <PrivateRoute component={UserProfile} path="/profile" exact />
+          <PrivateRoute component={UserQuizResultsPage}  path="/userquizresult/:id" exact />
+          <Route component={Home} />
+        </Switch>
           
         </Switch>
    

@@ -4,6 +4,12 @@ import React, { Component, Fragment, useRef, useState } from 'react'
  import { Link } from 'react-router-dom';
  import Countdown from 'react-countdown';
  import QuizPageAnimation from './QuizPageAnimation';
+ import MathElement from '../../MathElement/MathElement';
+ import parse from "html-react-parser";
+//  import MathJax from 'react-mathjax-preview'
+import MathJax from "react-mathjax-preview/es/index";
+//  import MathJax from "mathjax3-react";
+ 
  class QuizRenderPage extends Component {
 
     state = {
@@ -19,7 +25,8 @@ import React, { Component, Fragment, useRef, useState } from 'react'
         open:true,
         message:"",
         userresultid:"",
-        quiz_time : 100
+        quiz_time : 100,
+        quesID :[]
  }
 
      componentDidMount(){
@@ -59,7 +66,8 @@ if(localStorage.getItem('quiz'+this.props.quizid)){
 
 var data = {
 quiz_data : JSON.stringify(this.state.selectedQuiz),
-quizid:this.state.quiz_id
+quizid:this.state.quiz_id,
+questionid :localStorage.getItem("questionID"+this.state.quiz_id)
 
 }
 // console.log(data);
@@ -125,6 +133,12 @@ quizid:this.state.quiz_id
   }
 
 
+    mathJaxFuntion = (html)=>{
+    return     <MathJax.Provider>
+    <MathJax.Html html={html}/>
+  </MathJax.Provider>
+  }
+ 
     render() {
 
       
@@ -170,13 +184,16 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
 
     var renderQuiz =<QuizPageAnimation/>;
   // code suru
-
+  
   var selected_quiz = this.state.selectedQuiz;
       if(!this.state.loading ){
-          
+        var questionIdArray =  [];
       const quizData =  this.state.quesData.data;
        var renderQuiz  =quizData==0?ModalCode:  quizData.map(i=>{
-  
+       
+         questionIdArray.push(i.id);
+         console.log(questionIdArray);
+ 
           var setting = JSON.parse(i.setting) ;
           var posMark = setting.posMark;
           var negMark = setting.negMark;
@@ -195,8 +212,34 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
   }
    var optionValue = "";
    optionValue =   options[optionkey].option;
-   optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
-  var makeid =    id+optionkey;
+
+   
+   
+
+  if(options[optionkey].type=='math'){
+    optionValue =   String.raw`${optionValue}`
+   optionValue =     <MathJax math={optionValue} />
+    // optionValue = this.mathJaxFuntion(optionValue);
+    // optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
+  }else if(options[optionkey].type=='text'){
+    optionValue = parse(optionValue);
+  }
+
+
+
+  //  optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
+
+  // const tex = `<math ><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup><mo>&#x222B;</mo><msqrt><mfrac><mn>3</mn><mn>4</mn></mfrac></msqrt></math>`;
+  // optionValue =  <MathElement elements={optionValue} />;
+
+  // optionValue = <MathElement html={optionValue} />
+//   optionValue =    <MathJax.Provider>
+//   <MathJax.Html html={optionValue}/>
+// </MathJax.Provider>
+{/* <MathJax math={this.state.math}  */}
+// optionValue =  <MathJax math={optionValue} />
+  // optionValue =  parse(optionValue);
+  var makeid =  id+optionkey;
     return (
           <label for={makeid} class={classOfRadioButton}  value={optionkey} ><input  onClick={this.quizSelectHandler} questionid={id}   id={makeid} key={makeid} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
        )
@@ -230,12 +273,18 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
      {renderOptions}
     </div></div>)
           })
+localStorage.setItem("questionID"+this.state.quiz_id, JSON.stringify(questionIdArray))
+
       }
  
 
 
 var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center justify-center px-8 py-3">
-<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded " type="button" onClick={this.onClickHandle}>Submit</button></div> 
+<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded " type="button" onClick={this.onClickHandle}>Submit</button></div> ;
+// if(!this.state.loading){
+//   console.log(this.state.quesID);
+// }
+
     return (
             <div>
  

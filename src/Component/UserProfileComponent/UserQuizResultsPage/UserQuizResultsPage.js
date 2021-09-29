@@ -19,6 +19,8 @@ export class UserQuizResultsPage extends Component {
         quizRadioButtonClass : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer',
         quizRightAns : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-green-200 bg-red-200',
         quizWrongButton:'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg  bg-red-200',
+        quizUserClickedButton:'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-blue-200',
+        
         userQuizResultAndQuestion:"",
         loading:true,
         urlparam:"",
@@ -156,7 +158,7 @@ question =  <div dangerouslySetInnerHTML={{__html:question}} />
 
 
 var options = data.option;
- 
+statusques = "";
 if (this.isJson(options)){
 var renderOptions =  Object.keys(options).map(optionkey=>{
     var id =  data.id;
@@ -172,15 +174,18 @@ var classOfRadioButton =this.state.quizRadioButtonClass;
 // }else if(options[optionkey].type=='img'){;
 //   optionValue = <img src={options[optionkey].option}  />;
 // }
-statusques = "";
+
 optionValue =   options[optionkey].option;
 optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
 if(options[optionkey].userans == 1 && options[optionkey].mainans == 1){
-   var  classOfRadioButton =this.state.quizRightAns; statusques = "Correct";
+   var  classOfRadioButton =this.state.quizUserClickedButton;
+   
 }else if(options[optionkey].userans == 1  && options[optionkey].mainans ==0) {
-    var  classOfRadioButton =this.state.quizWrongButton; statusques = "InCorrect";
+    var  classOfRadioButton =this.state.quizWrongButton; 
+     
 }else if(options[optionkey].userans == 0  && options[optionkey].mainans ==1) {
     var  classOfRadioButton =this.state.quizRightAns; 
+    
 } 
  
   return (

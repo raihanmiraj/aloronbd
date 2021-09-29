@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link , Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { LockClosedIcon } from '@heroicons/react/solid'
+import { login } from '../../Component/utils/index';
  class Login extends Component {
 
   state = {
@@ -25,12 +26,21 @@ console.log(data);
 axios.post('/login', data )
 .then( (response) => {
   console.log(response);
- localStorage.setItem('TOKEN_KEY' , response.data.token );
+  const TOKEN_KEY_VALUE = response.data.token;
+  if(TOKEN_KEY_VALUE!=null && TOKEN_KEY_VALUE!=undefined && TOKEN_KEY_VALUE !=""){
+    login(TOKEN_KEY_VALUE);
+    this.setState({
+      loggedIn:true
+    });
+  }
+  
+//  this.props.history.push('/profile');
+// const { history } = this.props;
+// history.push("/profile")
+//  localStorage.setItem('TOKEN_KEY' , response.data.token );
  
- this.setState({
-   loggedIn:true
- });
- this.props.setUser(response.data.user);
+
+//  this.props.setUser(response.data.user);
 })
 .catch(  (error) => {
   console.log(error);
