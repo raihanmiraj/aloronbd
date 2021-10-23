@@ -64,7 +64,7 @@ import QuizRenderPage from '../../../Component/Quiz/QuizPage/QuizRenderPage';
        this.setState({
          title:title,
          description:description,
-         quizimage:quizimage,
+         quizimage:JSON.parse(quizimage),
          subject_name:subject_name,
          status:status,
          point:point,
@@ -173,7 +173,8 @@ import QuizRenderPage from '../../../Component/Quiz/QuizPage/QuizRenderPage';
      </div>
    </div>
    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-     <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src={this.state.quizimage} alt=""/>
+ 
+     <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src={ this.state.quizimage.medium} alt=""/>
    </div>
  </div>;
  

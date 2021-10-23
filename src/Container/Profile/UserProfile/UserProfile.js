@@ -49,7 +49,7 @@ return ( <tr key={data.id}>
   <td className="px-6 py-4 whitespace-nowrap">
     <div className="flex items-center">
       <div className="flex-shrink-0 h-10 w-10">
-        <img className="h-10 w-10 rounded-full" src={data.image} alt="" />
+        <img className="h-10 w-10 rounded-full" src={JSON.parse(data.image).thumb} alt="" />
       </div>
       <div className="ml-4">
         <div className="text-sm font-medium text-gray-900">{data.quiz_name}</div>
@@ -92,10 +92,12 @@ return ( <tr key={data.id}>
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
             <div className="px-6">
               <div className="flex flex-wrap justify-center">
-              
+              <img className="h-20 w-20 rounded-full bg-gray-400  mt-10"  src="assets/img/defaultaloroncover.png" />
+ 
              
                  </div>
-              <div className="text-center mt-12">
+              <div className="text-center mt-5">
+             
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
                 {this.state.userProfileData.name}
                 </h3>
