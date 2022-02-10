@@ -8,6 +8,7 @@ import React, { Component, Fragment, useRef, useState } from 'react'
  import parse from "html-react-parser";
 //  import MathJax from 'react-mathjax-preview'
 import MathJax from "react-mathjax-preview/es/index";
+import './QuizRenderPage.css';
 //  import MathJax from "mathjax3-react";
  
  class QuizRenderPage extends Component {
@@ -286,8 +287,8 @@ var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center just
 // }
 
     return (
-            <div>
- 
+            <div className='quiz-layout'>
+  
                {renderQuiz}
  {buttonLoad}
 

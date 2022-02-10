@@ -166,24 +166,25 @@ import React, { useState } from "react";
 import { Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import {logout,isLogin} from "../utils/index";
-function Navbar() {
+function Navbar(props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(isLogin());
   const [isOpenProfileButton, setIsOpenProfileButton] = useState(false);
   // const [isAuthenticate, setIsOpenAuthenticate] = useState(isLogin());
   return (
     <div>
       <nav className="bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <img
                   className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                  src="/assets/img/logo.png"
                   alt="Workflow"
                 />
               </div>
-              <div className="hidden md:block">
+              <div className="hidden md:block ">
                 <div className="ml-10 flex items-baseline space-x-4">
                 
                   <Link
@@ -225,7 +226,7 @@ function Navbar() {
                 </div>
               </div>
             </div>
-            <div className="-mr-2 flex md:hidden">
+            <div className="-mr-2 flex md:hidden absolute">
               <button
                 onClick={() =>{
                   setIsOpen(!isOpen)
@@ -274,7 +275,7 @@ function Navbar() {
             </div>
 {/*  PROFILE MENU*/}
 
-{isLogin()?(<div class="ml-3 relative">
+{isAuth?(<div class="ml-3 relative">
           <div>
             <button   onClick={() =>{  setIsOpenProfileButton(!isOpenProfileButton) }} type="button" class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
               <span class="sr-only">Open user menu</span>

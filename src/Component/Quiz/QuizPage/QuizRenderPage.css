@@ -1,0 +1,9 @@
+.quiz-layout{
+    padding: 0 20%;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .quiz-layout{
+        padding: 0 0;
+      }
+  }

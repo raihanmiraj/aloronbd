@@ -5,7 +5,8 @@ import { data } from 'autoprefixer';
 import { useHistory } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import QuizPage from '../../../Component/Quiz/QuizPage/QuizPage';
- 
+ import  '../../Quiz/QuizPage/QuizRenderPage.css';
+ import './UserQuizResultsPage.css'
 
 
 export class UserQuizResultsPage extends Component {
@@ -16,11 +17,14 @@ export class UserQuizResultsPage extends Component {
     
     state = {
         // quizRadioButtonClass : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer',
-        quizRadioButtonClass : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer',
-        quizRightAns : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-green-200 bg-red-200',
-        quizWrongButton:'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg  bg-red-200',
-        quizUserClickedButton:'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-blue-200',
-        
+        quizRadioButtonClass : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer relative',
+        // quizRightAns : 'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-green-200 bg-red-200',
+        // quizWrongButton:'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg  bg-red-200',
+        // quizUserClickedButton:'block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg bg-blue-200',
+        quizRightAns : 'block mt-4 border-2 border-green-600 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer relative',
+        quizWrongButton:'block mt-4 border-2 border-red-600 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer relative',
+        quizUserClickedButton:'block mt-4 border-2 border-green-600 rounded-lg py-2 px-6 text-lg hover:bg-gray-100 cursord-pointer relative',
+       
         userQuizResultAndQuestion:"",
         loading:true,
         urlparam:"",
@@ -174,22 +178,29 @@ var classOfRadioButton =this.state.quizRadioButtonClass;
 // }else if(options[optionkey].type=='img'){;
 //   optionValue = <img src={options[optionkey].option}  />;
 // }
-
+var classStyle = ""
+var justMessage = "";
 optionValue =   options[optionkey].option;
 optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
 if(options[optionkey].userans == 1 && options[optionkey].mainans == 1){
-   var  classOfRadioButton =this.state.quizUserClickedButton;
-   
+    var  classOfRadioButton =this.state.quizUserClickedButton;
+   justMessage = "You Clicked (Correct)"
+ 
+   var classStyle = "you-click"
 }else if(options[optionkey].userans == 1  && options[optionkey].mainans ==0) {
-    var  classOfRadioButton =this.state.quizWrongButton; 
+      var  classOfRadioButton =this.state.quizWrongButton; 
+    justMessage = "Wrong"
+    var classStyle = "wrong-ans"
      
 }else if(options[optionkey].userans == 0  && options[optionkey].mainans ==1) {
     var  classOfRadioButton =this.state.quizRightAns; 
+    justMessage = "Correct"
+    var classStyle = "correct-ans"
     
 } 
  
   return (
-        <label onClick={this.quizSelectHandler}  for={id} class={classOfRadioButton} disabled={"false"} value={optionkey} ><input id={id} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
+        <label onClick={this.quizSelectHandler}  for={id} class={classOfRadioButton} disabled={"false"} value={optionkey}><span className={classStyle}>{justMessage}</span><input id={id} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
      )
 })
 }else{
@@ -206,7 +217,7 @@ if(options[optionkey].userans == 1 && options[optionkey].mainans == 1){
  
  
         return (
-            <div>
+            <div className='quiz-layout'>
                 
                {QuizResultRender}
  

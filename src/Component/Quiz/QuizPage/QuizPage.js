@@ -333,8 +333,8 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
 var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center justify-center px-8 py-3">
 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded " type="button" onClick={this.onClickHandle}>Submit</button></div> 
     return (
-            <div>
- 
+            <div >
+  
                {renderQuiz}
  {buttonLoad}
 

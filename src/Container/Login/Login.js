@@ -10,11 +10,13 @@ import { login } from '../../Component/utils/index';
     email:"",
     password:"",
     message:"", 
-    loggedIn:false
+    loggedIn:false,
+    buttonState:"Sign In"
 
   }
 
   formSubmitHandler=(e)=>{
+    this.setState({buttonState:"Processing...", message:""})
 e.preventDefault();
  
 const data = {
@@ -26,11 +28,17 @@ console.log(data);
 axios.post('/login', data )
 .then( (response) => {
   console.log(response);
+  this.setState({  buttonState:"Sign In"})
+  if(response.data.result==0){
+    this.setState({  message:"Email Or Password Incorrect"})
+  }
   const TOKEN_KEY_VALUE = response.data.token;
   if(TOKEN_KEY_VALUE!=null && TOKEN_KEY_VALUE!=undefined && TOKEN_KEY_VALUE !=""){
     login(TOKEN_KEY_VALUE);
+    
     this.setState({
-      loggedIn:true
+      loggedIn:true,
+      
     });
   }
   
@@ -61,15 +69,15 @@ if(this.state.loggedIn){
         <div>
           <img
             className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+            src="assets/img/logo.png"
             alt="Workflow"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-              start your 14-day free trial
-            </a>
+            <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+              Register An Acoount
+            </Link>
           </p>
         </div>
         <form className="mt-8 space-y-6"   onSubmit={this.formSubmitHandler}>
@@ -106,8 +114,10 @@ if(this.state.loggedIn){
               />
             </div>
           </div>
-
-          <div className="flex items-center justify-between">
+          <p className="mt-2 text-center text-sm text-red-600">
+            {this.state.message}
+          </p>
+          {/* <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
                 id="remember-me"
@@ -125,18 +135,22 @@ if(this.state.loggedIn){
                 Forgot your password?
               </Link>
             </div>
-          </div>
+          </div> */}
+
+          
 
           <div>
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+              {/* <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
-              </span>
-              Sign in
-            </button>
+              </span> */}
+            {this.state.buttonState}
+            </button>  
+
+ 
           </div>
         </form>
       </div>
