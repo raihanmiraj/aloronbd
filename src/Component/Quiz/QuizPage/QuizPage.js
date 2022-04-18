@@ -19,7 +19,8 @@ import React, { Component, Fragment, useRef, useState } from 'react'
         open:true,
         message:"",
         userresultid:"",
-        quiz_time : 100
+        quiz_time : 100,
+        isoptionsort:0
  }
 
      componentDidMount(){
@@ -39,7 +40,8 @@ this.setState({
     quesData:response.data,
     loading:false,
     message:response.data.message,
-    quiz_time:response.data.time
+    quiz_time:response.data.time,
+    isoptionsort:response.data.isoptionsort
  });
 
  
@@ -207,6 +209,7 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
           var posMark = setting.posMark;
           var negMark = setting.negMark;
           console.log(posMark);
+          console.log(i.options)
           if (this.isJson(i.options)){
   var options = JSON.parse(i.options) ;
   
@@ -221,12 +224,7 @@ var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledb
   }
    var optionValue = "";
    optionValue =   options[optionkey].option;
-  // if(options[optionkey].type=='text'){
-  //   optionValue =   options[optionkey].option;
-  //   // optionValue =  <div dangerouslySetInnerHTML={{__html:optionValue}} />
-  // }else if(options[optionkey].type=='img'){
-  //   optionValue = <img src={options[optionkey].option}  />;
-  // }
+
   
     return (
           <label onClick={this.quizSelectHandler}  for={id} class={classOfRadioButton} disabled={"false"} value={optionkey} ><input id={id} type="radio" class="hidden" value={optionkey}  />{optionValue}</label>
@@ -334,6 +332,7 @@ var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center just
 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded " type="button" onClick={this.onClickHandle}>Submit</button></div> 
     return (
             <div >
+              {this.state.quiz_time}
   
                {renderQuiz}
  {buttonLoad}

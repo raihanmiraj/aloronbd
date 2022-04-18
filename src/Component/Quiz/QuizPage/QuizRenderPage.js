@@ -10,6 +10,7 @@ import React, { Component, Fragment, useRef, useState } from 'react'
 import MathJax from "react-mathjax-preview/es/index";
 import './QuizRenderPage.css';
 //  import MathJax from "mathjax3-react";
+// import Countdown from "react-countdown";
  
  class QuizRenderPage extends Component {
 
@@ -27,10 +28,14 @@ import './QuizRenderPage.css';
         message:"",
         userresultid:"",
         quiz_time : 100,
-        quesID :[]
+        quesID :[], 
+        timecounter:0,
+        autosubmit:0,
+        submit:false,
+        point:0
  }
 
-     componentDidMount(){
+   componentDidMount(){
   
       this.setState({
             quiz_id:this.props.quizid
@@ -45,7 +50,7 @@ this.setState({
     message:response.data.message,
     quiz_time:response.data.time
  });
-
+console.log(response.data.time)
  
  
 })
@@ -60,6 +65,8 @@ if(localStorage.getItem('quiz'+this.props.quizid)){
         selectedQuiz:JSON.parse(localStorage.getItem('quiz'+this.props.quizid)) ,
     });
 }
+setInterval(this.timecounterhandler,1000)
+      
     }
 
 
@@ -76,6 +83,7 @@ questionid :localStorage.getItem("questionID"+this.state.quiz_id)
     axios.post('/submitquiz/'+this.state.quiz_id , data)
     .then( (response) => {
   alert(response.data);
+  this.setState({submit:true, point:response.data })
     
    })
     .catch(  (error) => {
@@ -140,9 +148,15 @@ questionid :localStorage.getItem("questionID"+this.state.quiz_id)
   </MathJax.Provider>
   }
  
+timecounterhandler = ()=>{
+  this.setState({quiz_time:this.state.quiz_time - 1})
+}
+updateTimeCounter = (data)=>{
+  this.setState({quiz_time:data});
+}
+
     render() {
 
-      
 
  
 var ModalCode =   <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -281,14 +295,45 @@ localStorage.setItem("questionID"+this.state.quiz_id, JSON.stringify(questionIdA
 
 
 var buttonLoad = this.state.loading?"":  <div class="w-50 flex items-center justify-center px-8 py-3">
-<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded " type="button" onClick={this.onClickHandle}>Submit</button></div> ;
+<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-10 p-5 rounded "  type="button" onClick={this.onClickHandle}>Submit</button></div> ;
 // if(!this.state.loading){
 //   console.log(this.state.quesID);
 // }
 
+var timeleft  =Date.now() +  parseInt(this.state.quiz_time)
+const renderer = ({ hours, minutes, seconds, completed }) => {
+  document.title = hours+':'+minutes+':'+seconds;
+  var time = hours* 24 + minutes*60 + seconds;
+  console.log(time);
+  //  this.updateTimeCounter.bind(time);
+  // this.updateTimeCounter(time);
+
+  if(this.state.autosubmit){
+  if(hours == 0  && minutes==0 && seconds == 5){
+    this.onClickHandle()
+  }
+}
+ 
+if(this.state.submit){
+  return  <span>Your Point is { this.state.point}</span>;
+}
+
+  if (completed) {
+    // // Render a completed state
+    //  return <span>Time Over</span>;
+     return  <span>Time Over</span>;
+  } else {
+    // Render a countdown
+    return <span>{hours}:{minutes}:{seconds}</span>;
+  }
+}; 
     return (
             <div className='quiz-layout'>
-  
+ {this.state.loading || this.state.quiz_time<=0 || this.state.timeover==1?"":<div className='timeshow'> 
+  <Countdown date={Date.now() + parseInt(this.state.quiz_time)*1000} 
+ renderer={renderer} />   
+ </div>}
+
                {renderQuiz}
  {buttonLoad}
 
