@@ -109,7 +109,7 @@ class Header extends Component {
           <PrivateRoute component={()=><UserSettings setProfilePicture={this.setProfilePicture}/>} path="/settings" exact />
           <PrivateRoute component={UserQuizResultsPage}  path="/userquizresult/:id" exact />
           <Route component={Home} />
-     
+      
           
         </Switch>
         </AuthContext.Provider>
