@@ -54,6 +54,7 @@ import QuizRenderPage from '../../../Component/Quiz/QuizPage/QuizRenderPage';
       const quizMetaData = response.data.data;
        var quizmetasingle= quizMetaData[0];
        var title = quizmetasingle.quiz_name;
+       document.title = title;
        var description = quizmetasingle.description;
        var status = quizmetasingle.status;
        var subject_name = quizmetasingle.subject_name;
@@ -107,7 +108,9 @@ import QuizRenderPage from '../../../Component/Quiz/QuizPage/QuizRenderPage';
       var ContentRender =  "";
  
       if(!this.state.loading){
-
+        var imgdata = this.state.quizimage;
+var imagefile = imgdata.hasOwnProperty('thumb')?imgdata.thumb:(imgdata.hasOwnProperty('medium')?imgdata.medium:imgdata.image)
+ 
    var ContentRender =    <div class="relative bg-white overflow-hidden">
    <div class="max-w-7xl mx-auto">
      <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
@@ -174,7 +177,7 @@ import QuizRenderPage from '../../../Component/Quiz/QuizPage/QuizRenderPage';
    </div>
    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
  
-     <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src={ this.state.quizimage.medium} alt=""/>
+     <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src={ imagefile} alt=""/>
    </div>
  </div>;
  

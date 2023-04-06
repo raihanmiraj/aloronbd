@@ -42,6 +42,7 @@ export class UserSettings extends Component {
         return false;
     }
     componentDidMount(){
+        document.title ="Profile Settings";
         axios.post("/user/details")
         .then((response)=>{
           var data =    response.data;
@@ -75,6 +76,7 @@ export class UserSettings extends Component {
            newimage:1,
            imagetodisplay:data[0].image.url});
            console.log(data[0].image.url);
+           this.formSubmitHandler();
        }
 
     formSubmitHandler = ()=>{
@@ -137,7 +139,7 @@ export class UserSettings extends Component {
                          {/* <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full">
   Change Photo
 </button> */}
-<UploadImgBB  uploadHandle = {this.uploadFile} multiple={false}/>
+<UploadImgBB  uploadHandle = {this.uploadFile}  multiple={false}/>
 </div>
 
 

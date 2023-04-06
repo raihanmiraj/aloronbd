@@ -23,6 +23,7 @@ export class UserOwnProfile extends Component {
       }
     
       componentDidMount(){
+        document.title ="Profile";
         axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("TOKEN_KEY");
         axios.post('/userresult')
         .then( (response) => {
@@ -64,11 +65,13 @@ var tabledata = this.state.loading==false? QuizAttendData.map(data => {
 if(data.is_user_submitted==0){
  return "";
 } 
+var imgdata = JSON.parse(data.image);
+var img = imgdata.hasOwnProperty('thumb')?imgdata.thumb:(imgdata.hasOwnProperty('medium')?imgdata.medium:imgdata.image)
 return ( <tr key={data.id}>
  <td className="px-6 py-4 whitespace-nowrap">
    <div className="flex items-center">
      <div className="flex-shrink-0 h-10 w-10">
-       <img className="h-10 w-10 rounded-full" src={JSON.parse(data.image).thumb} alt="" />
+       <img className="h-10 w-10 rounded-full" src={img} alt="" />
      </div>
      <div className="ml-4">
        <div className="text-sm font-medium text-gray-900">{data.quiz_name}</div>

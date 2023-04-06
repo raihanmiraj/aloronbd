@@ -23,6 +23,7 @@ import Profile from '../../Container/Profile/Profile';
  import {isLogin} from '../utils/index';
 import UserSettings from '../../Container/Profile/UserSettings/UserSettings';
 import UserOwnProfile from '../../Container/Profile/UserProfile/UserOwnProfile';
+import Check from '../../Check';
  
 class Header extends Component {
    state = {
@@ -30,7 +31,8 @@ class Header extends Component {
        loggedIn:isLogin(),
        navbaropen:false,
        loading:true,
-       profile_image:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+       profile_image:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+       pageTitle:"HomePage"
    }
  
    componentDidMount(){
@@ -52,7 +54,9 @@ class Header extends Component {
       // localStorage.removeItem("TOKEN_KEY");
     });
    }
-
+setTitle = (name)=>{
+  this.setState({pageTitle:name})
+}
    setProfilePicture = (data)=>{
      this.setState({profile_image:data})
    }
@@ -66,6 +70,23 @@ class Header extends Component {
    }
   
    setLoggedIn=()=>{
+    axios.get('/user' )
+    .then( (response) => {
+      var data = response.data;
+     this.setUser(response.data);
+     var imgdata =   JSON.parse(response.data.profile_image);
+     var image =  imgdata.hasOwnProperty('thumb')?imgdata.thumb:(imgdata.hasOwnProperty('medium')?imgdata.medium:imgdata.image);
+     this.setState({
+      loggedIn:true,
+      loading:false,
+      profile_image:image
+    })
+   
+    })
+    .catch(  (error) => {
+      console.log(error);
+      // localStorage.removeItem("TOKEN_KEY");
+    });
      this.setState({
        loggedIn:true
      })
@@ -98,7 +119,7 @@ class Header extends Component {
           <Route  path="/profile" component={()=> <UserProfile user={this.state.user} />} />
           <Route exact   path="/userquizresult/:id" component={UserQuizResultsPage} />
            */}
-          
+     
           <PublicRoute restricted={false} component={Home} path="/" exact />
           <PrivateRoute component={QuizList} path="/quizlist" exact />
           <PublicRoute restricted={isLogin()} component={()=> <Login loggedIn= {this.state.loggedIn} user={this.state.user} userlogin={this.setLoggedIn} setUser = {this.setUser}/>} path="/login" exact />
